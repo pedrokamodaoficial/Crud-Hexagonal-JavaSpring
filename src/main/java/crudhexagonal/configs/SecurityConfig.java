@@ -18,6 +18,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // permite iframe (H2 usa isso)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll() // libera H2
+                        .requestMatchers("/products/**").permitAll() //libera o uso da rota
                         .anyRequest().authenticated() // resto precisa de login
                 )
                 .formLogin(AbstractHttpConfigurer::disable); // mantém login padrão
