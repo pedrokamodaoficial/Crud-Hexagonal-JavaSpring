@@ -1,10 +1,8 @@
 package crudhexagonal.configs;
 
-import crudhexagonal.application.usecase.CreateProductUseCase;
-import crudhexagonal.application.usecase.DeleteProductUseCase;
-import crudhexagonal.application.usecase.ListProductsUseCase;
-import crudhexagonal.application.usecase.UpdateProductUseCase;
+import crudhexagonal.application.usecase.*;
 import crudhexagonal.domain.repository.ProductRepository;
+import crudhexagonal.domain.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,5 +27,15 @@ public class BeanConfig {
     @Bean
     public DeleteProductUseCase deleteProductUseCase(ProductRepository repository){
         return new DeleteProductUseCase(repository);
+    }
+
+    @Bean
+    public JwtService jwtService() {
+        return new JwtService();
+    }
+
+    @Bean
+    public LoginUseCase loginUseCase(UserRepository userRepository, JwtService jwtService) {
+        return new LoginUseCase(userRepository, jwtService);
     }
 }
