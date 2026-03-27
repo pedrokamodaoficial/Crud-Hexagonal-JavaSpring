@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class Product {
 
-    private UUID id;
+    private final UUID id;
     private String name;
     private BigDecimal price;
 
