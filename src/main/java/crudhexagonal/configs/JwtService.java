@@ -1,12 +1,15 @@
 package crudhexagonal.configs;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
 
+@Service
 public class JwtService {
 
     private final SecretKey SECRET_KEY =
@@ -18,7 +21,7 @@ public class JwtService {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) //1h
-                .signWith(SECRET_KEY)
+                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -28,14 +31,17 @@ public class JwtService {
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
 
-    public Boolean isValid(String token){ //Verifica se é válido
+    public Boolean isValid(String token){
         try {
-            extractUsername(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (Exception e){
             return false;
